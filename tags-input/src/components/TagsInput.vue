@@ -26,6 +26,7 @@
 				return this.tags.includes(this.newTag);
 			},
 		},
+		emits: ['change'],
 		methods: {
 			addNewTag() {
 				if (
@@ -35,11 +36,13 @@
 				) {
 					this.tags.push(this.newTag);
 					this.newTag = '';
+					this.$emit('change', this.tags);
 				}
 			},
 			removeTag(index) {
 				if (this.tags[index]) {
 					this.tags.splice(index, 1);
+					this.$emit('change', this.tags);
 				}
 			},
 			removeLastTag() {
