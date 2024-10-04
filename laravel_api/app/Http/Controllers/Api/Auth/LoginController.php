@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Validation\ValidationException;
-
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -14,18 +15,17 @@ class LoginController extends Controller
      */
     public function __invoke(LoginRequest $request)
     {
-//        $user = User::where('email', $request->email)->first();
-//
-//        if (!$user || !Hash::check($request->password, $user->password)) {
-//            throw ValidationException::withMessages([
-//                'email' => ['The provided credentials are incorrect.'],
-//            ]);
-//        }
+        $user = User::where('email', $request->email)->first();
 
-        if (!auth()->attempt($request->only(['email', 'password']))) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+
+        return response()->json([
+            'user' => $user,
+            'token' => $user->createToken('laravel_api_token')->plainTextToken
+        ]);
     }
 }

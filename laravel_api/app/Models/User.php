@@ -41,8 +41,11 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime'
         ];
+    }
+
+    public function tasks() {
+        return $this->hasMany(Task::class);
     }
 }
