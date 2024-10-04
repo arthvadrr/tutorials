@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api\Auth;
 
-use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Hash;
 
 
 class LoginController extends Controller
@@ -16,9 +14,15 @@ class LoginController extends Controller
      */
     public function __invoke(LoginRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+//        $user = User::where('email', $request->email)->first();
+//
+//        if (!$user || !Hash::check($request->password, $user->password)) {
+//            throw ValidationException::withMessages([
+//                'email' => ['The provided credentials are incorrect.'],
+//            ]);
+//        }
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!auth()->attempt($request->only(['email', 'password']))) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
